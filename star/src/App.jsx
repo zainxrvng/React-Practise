@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div>
-        <Ratings />
+        <Ratings message = "How did you like the expericeane of React" color= "red" feedbackMessages={["shit", "ass", "meh", "nice", "very good"]}/>
       </div>
     </>
   );
