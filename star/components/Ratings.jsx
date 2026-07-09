@@ -1,22 +1,32 @@
+import { useState } from "react";
+
 const Ratings = () => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
   const stars = Array.from({ length: 5 }, (_, i) => i + 1);
-  const clicked = () => console.log("clicked")
-  const hovered = (direction) => console.log("hovered",direction)
+  const feedbackMessages = ["terriable", "poor", "average", "nice", "excelent"]
+
   return (
     <>
       <div className="rating-container">
         <h2>rate your expreicance</h2>
+        <p>
+          {/* {rating} {hover} */}
+        </p>
         <div className="stars">
-          {stars.map((stars) => (
-            <span onClick={clicked}
-            onMouseEnter={() => {hovered("enter")}}
-            onMouseLeave={() => {hovered("leave")}}
-             className="star" key={stars}>
-              {" "}
-              {"\u2605"}{" "}
+          {stars.map((star) => (
+            <span
+              onClick={() => setRating(star)}
+              onMouseEnter={() => setHover(star)}
+              onMouseLeave={() => setHover(0)}
+              className={`star ${star <= (hover || rating) ? "active" : "" }`}
+              key={star}
+            >
+              {"\u2605"}
             </span>
           ))}
         </div>
+        {rating > 0 && <p className="feedback">{feedbackMessages[rating, hover - 1]}</p>}
       </div>
     </>
   );
