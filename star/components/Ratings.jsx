@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Star from "./Star";
-
+import Modal from "./Modal";
 const Ratings = ({ message, color, feedbackMessages }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -58,16 +58,12 @@ const Ratings = ({ message, color, feedbackMessages }) => {
         >
           Submit
         </button>
+        
       </div>
-      {submit && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>thank you</h2>
-            <p>you rated us {rating} star{rating > 1 ? "s" : ""}</p>
-            <button className="close-btn" onClick={closeModal}>Close </button>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={submit}
+      onClose={closeModal}
+      rating={rating}
+      />
     </>
   );
 };
