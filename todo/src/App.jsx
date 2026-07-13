@@ -1,6 +1,5 @@
 import './App.css'
 import Modal from './components/Modal'
-import Addtodo from './components/Addtodo'
 
 function App() {
 
@@ -8,7 +7,6 @@ function App() {
   return (
     <>
     <Modal />
-    <Addtodo />
     </>
   )
 }
