@@ -1,5 +1,5 @@
 import { useState } from "react";
-const Newforms = () => {
+const Newforms = ( {notes, setNotes} ) => {
   const [formData, setFormData] = useState({
     Title: "",
     Priorty: "Medium",
@@ -10,10 +10,27 @@ const Newforms = () => {
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value})
   }
-  console.log(formData);
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!formData.Title || !formData.Description) return
+    
+    const newNotes = {id: Date.now(), ...formData}
+
+    setNotes([newNotes, ...notes])
+
+    setFormData({
+      Title: "",
+      Priorty: "Medium",
+      Category: "Work",
+      Description: "",
+    });
+      console.log("Form Submitted :", formData);
+
+  }
   return (
-    <div>
-      <form className="mb-6">
+    <div>``
+      <form onSubmit= {handleSubmit}className="mb-6">
         <div className="mb-4">
           <label htmlFor="title" className="block font-semibold">
             Title
