@@ -29,7 +29,7 @@ const Newforms = ( {notes, setNotes} ) => {
 
   }
   return (
-    <div>``
+    <div>
       <form onSubmit= {handleSubmit}className="mb-6">
         <div className="mb-4">
           <label htmlFor="title" className="block font-semibold">
