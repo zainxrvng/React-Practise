@@ -1,4 +1,4 @@
-const NotesList = ( {notes} ) => {
+const NotesList = ( {notes, deleteNotes} ) => {
    if ( notes.length === 0) {
     return <p className='text-center text-grey-500'>No Notes yet</p>
     
@@ -17,9 +17,15 @@ const NotesList = ( {notes} ) => {
           <p className="text-sm text-grey-600">
             <strong>Priorty:</strong> {note.Priorty}
           </p>
-          <p className="mt-2">
-            {note.Description}
-          </p>
+          <p className="mt-2">{note.Description}</p>
+          <button
+            className="mt-3 text-red-500 cursor-pointer transition hover:text-red-700"
+            onClick={() => {
+              deleteNotes(note.id);
+            }}
+          >
+            🗑️ Delete
+          </button>
         </div>
       ))}
     </div>
