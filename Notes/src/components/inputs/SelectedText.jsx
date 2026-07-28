@@ -6,7 +6,6 @@ const SelectedText = ({ name, value, label, onChange, options }) => {
       </label>
       <select
         name={name}
-        type="text"
         value={value}
         className="w-full rounded p-2 border"
         onChange={onChange}

@@ -1,24 +1,19 @@
-const SelectedText = ({ name, value, label, onChange, options }) => {
+const TextArea = ({ name, value, label, onChange }) => {
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block font-semibold">
         {label}
       </label>
-      <select
+      <textarea
+        id={name}
         name={name}
         type="text"
         value={value}
         className="w-full rounded p-2 border"
         onChange={onChange}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      />
     </div>
   );
 };
 
-export default SelectedText;
+export default TextArea;

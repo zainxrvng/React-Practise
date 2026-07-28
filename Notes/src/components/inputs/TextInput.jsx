@@ -1,4 +1,4 @@
-const TextArea = ({ name, label, value, onChange, required = false }) => {
+const TextInput = ({ name, label, value, onChange, required = false }) => {
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block font-semibold">
@@ -9,9 +9,10 @@ const TextArea = ({ name, label, value, onChange, required = false }) => {
         value={value}
         className="w-full rounded p-2 border"
         onChange={onChange}
+        required= {required}
       />
     </div>
   );
 };
 
-export default TextArea;
+export default TextInput;

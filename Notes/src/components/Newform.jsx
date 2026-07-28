@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TextInput from "./inputs/TextInput";
 import SelectedText from "./inputs/SelectedText";
-import TextArea from "./inputs/TextInput";
+import TextArea from "./inputs/TextArea";
 
 const Newforms = ({ notes, setNotes }) => {
   const [formData, setFormData] = useState({
@@ -55,8 +55,8 @@ const Newforms = ({ notes, setNotes }) => {
                 required
               />
               <SelectedText
-                label="Priority"
-                name="priority"
+                label="Priorty"
+                name="Priorty"
                 value={formData.Priorty}
                 onChange={handleChange}
                 options={[
@@ -67,7 +67,7 @@ const Newforms = ({ notes, setNotes }) => {
               />
               <SelectedText
                 label="Category"
-                name="category"
+                name="Category"
                 value={formData.Category}
                 onChange={handleChange}
                 options={[
