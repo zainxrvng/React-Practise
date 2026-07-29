@@ -1,12 +1,11 @@
 import './App.css'
-import Modal from './components/Modal'
-
+import { Button } from './components/ui/button'
 function App() {
 
 
   return (
     <>
-    <Modal />
+      <Button>hello</Button>
     </>
   )
 }
