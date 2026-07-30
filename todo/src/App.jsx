@@ -1,13 +1,14 @@
 import './App.css'
 import { Button } from './components/ui/button'
+import FocusFlowLanding from './components/LandingPage';
 function App() {
 
 
   return (
     <>
-      <Button>hello</Button>
+      <FocusFlowLanding />
     </>
-  )
+  );
 }
 
 export default App
