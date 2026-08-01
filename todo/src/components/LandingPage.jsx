@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 /**
  * FocusFlowLanding.jsx
  * ---------------------------------------------------------------------------
@@ -165,10 +167,10 @@ function Navbar() {
         {/* Auth actions */}
         <div className="flex items-center gap-4">
           <button className="hidden text-[#464554] transition-opacity hover:opacity-80 active:scale-95 sm:block">
-            Sign In
+            <Link to="/signin"> Sign In</Link>
           </button>
           <button className="rounded-full bg-[#6063ee] px-6 py-2.5 text-white transition-all hover:opacity-90 active:scale-95">
-            Sign Up
+            <Link to="/signup"> Sign Up</Link>
           </button>
         </div>
       </div>
