@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardAction,
@@ -11,7 +12,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 const Signup = () => {
+  const [formdata, Setformdata] = useState({
+    email: "",
+    password: ""
+  })
+  const handleChange = (e) => {
+    Setformdata({...formdata, [e.target.name]: e.target.value})
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log("formSubmitting", formdata)
+  }
   return (
     <div className="flex justify-center items-center min-h-screen">
       <Card className="w-full max-w-sm">
@@ -24,16 +37,21 @@ const Signup = () => {
             <Button variant="link"><Link to='/Signin'>Sign In</Link></Button>
           </CardAction>
         </CardHeader>
+        <form onSubmit={handleSubmit}>
         <CardContent>
-          <form>
+          
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
+                onChange={handleChange}
                   id="email"
                   type="email"
+                  name="email"
+                  value={formdata.email}
                   placeholder="m@example.com"
                   required
+
                 />
               </div>
               <div className="grid gap-2">
@@ -46,10 +64,10 @@ const Signup = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required name="password" value={formdata.password}
+                onChange={handleChange} />
               </div>
             </div>
-          </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button type="submit" className="w-full">
@@ -59,6 +77,7 @@ const Signup = () => {
             Login with Google
           </Button>
         </CardFooter>
+      </form>
       </Card>
     </div>
   );
