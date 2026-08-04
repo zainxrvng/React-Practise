@@ -233,7 +233,8 @@ function Hero() {
                 background: "linear-gradient(to bottom, #6366F1, #4F46E5)",
               }}
             >
-              Get Started
+              
+              <Link to="/Dashboard">Get Started</Link>
             </button>
             <button className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/50 px-8 py-4 font-semibold text-[#0b1c30] backdrop-blur-md transition-all hover:bg-white/80 active:scale-95 sm:w-auto">
               <PlayCircleIcon className="h-5 w-5" />
