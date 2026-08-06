@@ -12,6 +12,8 @@ import {
   RotateCcw,
   Plus,
 } from "lucide-react";
+import DialogDemo from "../Pages/Dialog";
+import { useState } from "react";
 
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
@@ -21,6 +23,10 @@ import {
 // back to bg-primary, text-[#464554] back to text-on-surface-variant, etc.
 
 function Dashboard() {
+  const [task, SetTask] = useState([]);
+  const addTask = (newtask) => {
+    Settask(prev =>[...prev, {id: Date.now(), done: false, ...newtask}])
+  }
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
@@ -58,10 +64,7 @@ function Dashboard() {
       {/* Side Nav */}
       <aside className="fixed left-0 h-full w-64 z-50 bg-white/70 backdrop-blur-xl border-r border-white/20 flex flex-col p-6 pt-24 space-y-4">
         <div className="px-2 mb-6">
-          <button className="w-full bg-[#6063ee] text-[#fffbff] rounded-xl py-3 px-4 flex items-center justify-center gap-2 text-xs font-semibold tracking-wider uppercase shadow-lg shadow-[#4648d4]/20 active:scale-[0.98] transition-all">
-            <Plus className="w-5 h-5" />
-            New Task
-          </button>
+          <DialogDemo onAddtask={addTask} />
         </div>
 
         <nav className="space-y-1">
