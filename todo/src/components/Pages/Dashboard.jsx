@@ -25,7 +25,7 @@ import { useState } from "react";
 function Dashboard() {
   const [task, SetTask] = useState([]);
   const addTask = (newtask) => {
-    Settask(prev =>[...prev, {id: Date.now(), done: false, ...newtask}])
+    SetTask(prev =>[...prev, {id: Date.now(), done: false, ...newtask}])
   }
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
@@ -64,7 +64,7 @@ function Dashboard() {
       {/* Side Nav */}
       <aside className="fixed left-0 h-full w-64 z-50 bg-white/70 backdrop-blur-xl border-r border-white/20 flex flex-col p-6 pt-24 space-y-4">
         <div className="px-2 mb-6">
-          <DialogDemo onAddtask={addTask} />
+          <DialogDemo onAddtask={addTask} /> {console.log(task)}
         </div>
 
         <nav className="space-y-1">
