@@ -25,8 +25,20 @@ import { useState } from "react";
 function Dashboard() {
   const [task, SetTask] = useState([]);
   const addTask = (newtask) => {
-    SetTask(prev =>[...prev, {id: Date.now(), done: false, ...newtask}])
-  }
+    SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
+  };
+  const formatedDate = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
+  const remainingTask = task.filter((t) => !t.done).length;
+
+  // const taskToggle = (id) => {
+  //   SetTask((prev) => [...prev, {done: true, ...task} ])
+  // }
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
@@ -141,33 +153,40 @@ function Dashboard() {
               Today's Focus
             </h2>
             <p className="text-[#464554]">
-              Wednesday, October 25 • 4 tasks remaining
+              {formatedDate} • {remainingTask} tasks remaining
             </p>
           </header>
 
           <div className="space-y-4">
-            {/* Task 1 */}
-            <div className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40">
-              <div className="relative w-6 h-6 border-2 border-[#4648d4] rounded-full cursor-pointer hover:bg-[#4648d4]/5 transition-colors flex items-center justify-center">
-                <Check className="text-[#4648d4] w-4 h-4 scale-0 transition-transform group-hover:scale-75" />
-              </div>
-              <div className="flex-grow">
-                <h3 className="text-lg font-semibold text-[#0b1c30] mb-1">
-                  Complete brand identity audit for Client X
-                </h3>
-                <div className="flex items-center gap-3">
-                  <span className="bg-[#4648d4]/10 text-[#4648d4] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase border border-[#4648d4]/20">
-                    High Priority
-                  </span>
-                  <span className="text-[#464554]/60 flex items-center gap-1 text-[10px] font-semibold">
-                    <Folder className="w-3.5 h-3.5" /> Deep Work
-                  </span>
+            {task.map((task) => (
+              <div
+                className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40"
+                key={task.id}
+              >
+                <div className="relative w-6 h-6 border-2 border-[#4648d4] rounded-full cursor-pointer hover:bg-[#4648d4]/5 transition-colors flex items-center justify-center">
+                  <Check
+                    className="text-[#4648d4] w-4 h-4 scale-0 transition-transform group-hover:scale-75"
+                  />
                 </div>
+                <div className="flex-grow">
+                  <h3 className="text-lg font-semibold text-[#0b1c30] mb-1">
+                    {task.title}
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[#4648d4]/10 text-[#4648d4] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase border border-[#4648d4]/20">
+                      {task.priority}
+                    </span>
+                    <span className="text-[#464554]/60 flex items-center gap-1 text-[10px] font-semibold">
+                      <Folder className="w-3.5 h-3.5" /> {task.project}
+                    </span>
+                  </div>
+                </div>
+                <button className="text-[#464554]/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MoreVertical className="w-5 h-5" />
+                </button>
               </div>
-              <button className="text-[#464554]/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
+            ))}
+            {/* Task 1 */}
 
             {/* Task 2 */}
             <div className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40">
