@@ -39,6 +39,14 @@ function Dashboard() {
   // const taskToggle = (id) => {
   //   SetTask((prev) => [...prev, {done: true, ...task} ])
   // }
+
+  const toggleTask = (id) => {
+    SetTask((prev) => (
+      prev.map((t) => (
+        t.id == id ? {...t, done: !t.done} : t
+      ))
+    ))
+  }
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
@@ -163,15 +171,25 @@ function Dashboard() {
                 className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40"
                 key={task.id}
               >
-                <div className="relative w-6 h-6 border-2 border-[#4648d4] rounded-full cursor-pointer hover:bg-[#4648d4]/5 transition-colors flex items-center justify-center">
-                  <Check
-                    className="text-[#4648d4] w-4 h-4 scale-0 transition-transform group-hover:scale-75"
-                  />
+                <div
+                  className={`relative w-6 h-6 border-2 rounded-full cursor-pointer flex items-center justify-center transition-colors ${
+                    task.done
+                      ? "bg-[#4648d4] border-[#4648d4]"
+                      : "border-[#4648d4] hover:bg-[#4648d4]/5"
+                  }`}
+                  onClick={() => toggleTask(task.id)}
+                >
+                  {task.done && (
+                    <Check className="text-white w-4 h-4" strokeWidth={3} />
+                  )}
                 </div>
-                <div className="flex-grow">
-                  <h3 className="text-lg font-semibold text-[#0b1c30] mb-1">
+                <div className={`flex-grow ${task.done ? "opacity-50" : ""}`}>
+                  <h3
+                    className={`text-lg font-semibold text-[#0b1c30] mb-1 ${task.done ? "line-through" : ""}`}
+                  >
                     {task.title}
                   </h3>
+
                   <div className="flex items-center gap-3">
                     <span className="bg-[#4648d4]/10 text-[#4648d4] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase border border-[#4648d4]/20">
                       {task.priority}
@@ -186,51 +204,6 @@ function Dashboard() {
                 </button>
               </div>
             ))}
-            {/* Task 1 */}
-
-            {/* Task 2 */}
-            <div className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40">
-              <div className="relative w-6 h-6 border-2 border-[#c7c4d7] rounded-full cursor-pointer hover:border-[#4648d4] transition-colors flex items-center justify-center" />
-              <div className="flex-grow">
-                <h3 className="text-lg font-semibold text-[#0b1c30] mb-1">
-                  Draft Q4 revenue projection report
-                </h3>
-                <div className="flex items-center gap-3">
-                  <span className="bg-[#5c5f61]/10 text-[#5c5f61] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase border border-[#5c5f61]/20">
-                    Medium
-                  </span>
-                  <span className="text-[#464554]/60 flex items-center gap-1 text-[10px] font-semibold">
-                    <Folder className="w-3.5 h-3.5" /> Marketing Strategy
-                  </span>
-                </div>
-              </div>
-              <button className="text-[#464554]/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Task 3 — done */}
-            <div className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40">
-              <div className="relative w-6 h-6 bg-[#4648d4] border-2 border-[#4648d4] rounded-full cursor-pointer flex items-center justify-center">
-                <Check className="text-white w-4 h-4" strokeWidth={3} />
-              </div>
-              <div className="flex-grow opacity-50">
-                <h3 className="text-lg font-semibold text-[#0b1c30] mb-1 line-through">
-                  Review team sprint backlog
-                </h3>
-                <div className="flex items-center gap-3">
-                  <span className="bg-[#5d5f5f]/10 text-[#5d5f5f] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase">
-                    Done
-                  </span>
-                  <span className="text-[#464554]/60 flex items-center gap-1 text-[10px] font-semibold">
-                    <Folder className="w-3.5 h-3.5" /> Daily Operations
-                  </span>
-                </div>
-              </div>
-              <button className="text-[#464554]/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
 
             {/* Empty state */}
             <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 group cursor-pointer hover:bg-white/20 transition-all">
