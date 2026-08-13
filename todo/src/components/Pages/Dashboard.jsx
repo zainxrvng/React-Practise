@@ -43,7 +43,7 @@ function Dashboard() {
   const toggleTask = (id) => {
     SetTask((prev) => (
       prev.map((t) => (
-        t.id == id ? {...t, done: !t.done} : t
+        t.id === id ? {...t, done: !t.done} : t
       ))
     ))
   }
@@ -166,36 +166,36 @@ function Dashboard() {
           </header>
 
           <div className="space-y-4">
-            {task.map((task) => (
+            {task.map((tasks) => (
               <div
                 className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40"
-                key={task.id}
+                key={tasks.id}
               >
                 <div
                   className={`relative w-6 h-6 border-2 rounded-full cursor-pointer flex items-center justify-center transition-colors ${
-                    task.done
+                    tasks.done
                       ? "bg-[#4648d4] border-[#4648d4]"
                       : "border-[#4648d4] hover:bg-[#4648d4]/5"
                   }`}
-                  onClick={() => toggleTask(task.id)}
+                  onClick={() => toggleTask(tasks.id)}
                 >
-                  {task.done && (
+                  {tasks.done && (
                     <Check className="text-white w-4 h-4" strokeWidth={3} />
                   )}
                 </div>
-                <div className={`flex-grow ${task.done ? "opacity-50" : ""}`}>
+                <div className={`flex-grow ${tasks.done ? "opacity-50" : ""}`}>
                   <h3
-                    className={`text-lg font-semibold text-[#0b1c30] mb-1 ${task.done ? "line-through" : ""}`}
+                    className={`text-lg font-semibold text-[#0b1c30] mb-1 ${tasks.done ? "line-through" : ""}`}
                   >
-                    {task.title}
+                    {tasks.title}
                   </h3>
 
                   <div className="flex items-center gap-3">
                     <span className="bg-[#4648d4]/10 text-[#4648d4] px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase border border-[#4648d4]/20">
-                      {task.priority}
+                      {tasks.priority}
                     </span>
                     <span className="text-[#464554]/60 flex items-center gap-1 text-[10px] font-semibold">
-                      <Folder className="w-3.5 h-3.5" /> {task.project}
+                      <Folder className="w-3.5 h-3.5" /> {tasks.project}
                     </span>
                   </div>
                 </div>
@@ -206,12 +206,14 @@ function Dashboard() {
             ))}
 
             {/* Empty state */}
-            <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 group cursor-pointer hover:bg-white/20 transition-all">
-              <PlusCircle className="text-[#4648d4]/40 w-9 h-9 group-hover:scale-110 transition-transform" />
-              <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]/40">
-                Add another task to your day
-              </p>
-            </div>
+            {task.length === 0 && (
+              <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 group cursor-pointer hover:bg-white/20 transition-all">
+                <PlusCircle className="text-[#4648d4]/40 w-9 h-9 group-hover:scale-110 transition-transform" />
+                <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]/40">
+                  Add another task to your day
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
