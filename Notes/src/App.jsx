@@ -1,9 +1,17 @@
 // import Forms from "./components/Forms"
 import Newforms from "./components/Newform"
-import {useState} from "react"
+import {useState , useEffect} from "react"
 import NotesList from "./components/NotesList"
 const App = () => {
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState(() => {
+    const notes = JSON.parse(localStorage.getItem("notes"))
+    return notes || []
+  })
+useEffect(() => {
+localStorage.setItem("notes", JSON.stringify(notes))
+
+}, [notes])
+
   const deleteNotes = (id) => {
     const confrimDelete = window.confirm("are you sureyou want to delete this note?")
 
