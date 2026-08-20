@@ -16,7 +16,6 @@ import DialogDemo from "../Pages/Dialog";
 import { useState } from "react";
 import { useEffect } from "react";
 
-
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
 // pulled straight from DESIGN.md, so this renders correctly even if
@@ -30,13 +29,13 @@ function Dashboard() {
   const [timmer, setTimmer] = useState(0);
 
   useEffect(() => {
-    let timmerid
+    let timmerid;
     if (isRunning) {
-     timmerid = setInterval(() => {
+      timmerid = setInterval(() => {
         setTimmer((s) => s + 1);
-      },1000);
+      }, 1000);
     }
-          return () => clearInterval(timmerid);
+    return () => clearInterval(timmerid);
   }, [isRunning]);
   const addTask = (newtask) => {
     SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
@@ -277,10 +276,14 @@ function Dashboard() {
               >
                 {isRunning ? "Stop" : "Start"}
               </button>
-              <button className="w-12 h-12 flex items-center justify-center rounded-xl text-[#464554] hover:text-[#4648d4] transition-colors bg-white/70 backdrop-blur-xl border border-white/20">
-                <RotateCcw className="w-5 h-5"  onClick={() => {
-                  setTimmer(0)
-                }}/>
+              <button
+                className="w-12 h-12 flex items-center justify-center rounded-xl text-[#464554] hover:text-[#4648d4] transition-colors bg-white/70 backdrop-blur-xl border border-white/20"
+                onClick={() => {
+                  setTimmer(0);
+                  setIsRunning(false);
+                }}
+              >
+                <RotateCcw className="w-5 h-5" />
               </button>
             </div>
           </div>
