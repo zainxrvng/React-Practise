@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import DialogDemo from "../Pages/Dialog";
 import { useState } from "react";
-import { useEffect } from "react";
+import useTimmer from "@/hooks/use-timer";
 
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
@@ -25,18 +25,8 @@ import { useEffect } from "react";
 
 function Dashboard() {
   const [task, SetTask] = useState([]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [timmer, setTimmer] = useState(0);
+  const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer();
 
-  useEffect(() => {
-    let timmerid;
-    if (isRunning) {
-      timmerid = setInterval(() => {
-        setTimmer((s) => s + 1);
-      }, 1000);
-    }
-    return () => clearInterval(timmerid);
-  }, [isRunning]);
   const addTask = (newtask) => {
     SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
   };
@@ -48,10 +38,6 @@ function Dashboard() {
   }).format(new Date());
 
   const remainingTask = task.filter((t) => !t.done).length;
-
-  // const taskToggle = (id) => {
-  //   SetTask((prev) => [...prev, {done: true, ...task} ])
-  // }
 
   const toggleTask = (id) => {
     SetTask((prev) =>
@@ -259,8 +245,8 @@ function Dashboard() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-[40px] font-bold text-[#0b1c30] tracking-tighter">
-                  {timmer}
+                <span className="text-[30px] font-bold text-[#0b1c30] tracking-tighter">
+                  {formattedTime}
                 </span>
                 <span className="text-[10px] font-semibold tracking-wider uppercase text-[#464554]/60">
                   Work Session
@@ -271,7 +257,7 @@ function Dashboard() {
               <button
                 className="flex-grow bg-[#4648d4] text-white py-3 rounded-xl text-xs font-semibold tracking-wider uppercase hover:shadow-lg hover:shadow-[#4648d4]/30 active:scale-95 transition-all"
                 onClick={() => {
-                  setIsRunning(!isRunning);
+                  toggle();
                 }}
               >
                 {isRunning ? "Stop" : "Start"}
@@ -279,8 +265,7 @@ function Dashboard() {
               <button
                 className="w-12 h-12 flex items-center justify-center rounded-xl text-[#464554] hover:text-[#4648d4] transition-colors bg-white/70 backdrop-blur-xl border border-white/20"
                 onClick={() => {
-                  setTimmer(0);
-                  setIsRunning(false);
+                  reset();
                 }}
               >
                 <RotateCcw className="w-5 h-5" />
