@@ -44,6 +44,13 @@ function Dashboard() {
       prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
     );
   };
+
+  const totalTask = task.length
+  const completedTask = task.filter((t) => t.done).length;
+  const progress = totalTask === 0 ? 0 : Math.round((completedTask / totalTask) * 100)
+
+
+
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
@@ -279,7 +286,7 @@ function Dashboard() {
               <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]">
                 Daily Progress
               </p>
-              <span className="text-[#4648d4] font-bold text-xs">75%</span>
+              <span className="text-[#4648d4] font-bold text-xs">{progress}%</span>
             </div>
             <div className="space-y-4">
               <div className="flex gap-1 h-32 items-end justify-between px-2">
@@ -287,7 +294,7 @@ function Dashboard() {
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[50%]" />
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[20%]" />
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[80%]" />
-                <div className="w-4 bg-[#4648d4] rounded-t-full h-[95%]" />
+                <div className="w-4 bg-[#4648d4] rounded-t-full " style={{height: `${progress}%`}} />
                 <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
                 <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
               </div>
