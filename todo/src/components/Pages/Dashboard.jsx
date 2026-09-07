@@ -26,7 +26,17 @@ import useTimmer from "@/hooks/use-timer";
 function Dashboard() {
   const [task, SetTask] = useState([]);
   const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer();
-
+  const [searchTerm , setSearchTerm] = useState({
+    search: ""
+  })
+    const handleSubmit = (e) => {
+          e.preventDefault();
+        console.log("set searchdata", searchTerm);
+    };
+    const handelChange = (e) => {
+      setSearchTerm({...searchTerm, [e.target.name]: e.target.value})
+    };
+  
   const addTask = (newtask) => {
     SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
   };
@@ -65,6 +75,10 @@ function Dashboard() {
               className="w-full bg-white/40 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-[#4648d4]/20 transition-all"
               placeholder="Search tasks or projects..."
               type="text"
+              value={searchTerm.search}
+              onChange={handelChange}
+              name="search"
+              id="search"
             />
           </div>
         </div>
