@@ -40,6 +40,10 @@ function Dashboard() {
   const addTask = (newtask) => {
     SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
   };
+
+      const visableTask = task.filter((t) => (
+       t.title.toLowerCase().includes(searchTerm.search.toLowerCase())
+      ));
   const formatedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     day: "2-digit",
@@ -184,7 +188,7 @@ function Dashboard() {
           </header>
 
           <div className="space-y-4">
-            {task.map((tasks) => (
+            {visableTask.map((tasks) => (
               <div
                 className="rounded-xl p-6 flex items-center gap-6 transition-all group bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:border-white/40"
                 key={tasks.id}
@@ -224,7 +228,7 @@ function Dashboard() {
             ))}
 
             {/* Empty state */}
-            {task.length === 0 && (
+            {visableTask.length === 0 && (
               <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 group cursor-pointer hover:bg-white/20 transition-all">
                 <PlusCircle className="text-[#4648d4]/40 w-9 h-9 group-hover:scale-110 transition-transform" />
                 <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]/40">
