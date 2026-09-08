@@ -26,24 +26,29 @@ import useTimmer from "@/hooks/use-timer";
 function Dashboard() {
   const [task, SetTask] = useState([]);
   const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer();
-  const [searchTerm , setSearchTerm] = useState({
-    search: ""
-  })
-    const handleSubmit = (e) => {
-          e.preventDefault();
-        console.log("set searchdata", searchTerm);
-    };
-    const handelChange = (e) => {
-      setSearchTerm({...searchTerm, [e.target.name]: e.target.value})
-    };
-  
+  const [searchTerm, setSearchTerm] = useState({
+    search: "",
+  });
+  const [activeProject, setActiveProject] = useState(null);
+  // const handleSubmit = (e) => {
+  //       e.preventDefault();
+  //     console.log("set searchdata", searchTerm);
+  // };
+  const handelChange = (e) => {
+    setSearchTerm({ ...searchTerm, [e.target.name]: e.target.value });
+  };
+
   const addTask = (newtask) => {
     SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
   };
 
-      const visableTask = task.filter((t) => (
-       t.title.toLowerCase().includes(searchTerm.search.toLowerCase())
-      ));
+  const visableTask = task.filter((t) => {
+    const searchData = t.title
+      .toLowerCase()
+      .includes(searchTerm.search.toLowerCase());
+    const matchesProject = !activeProject || t.project === activeProject;
+    return searchData && matchesProject;
+  });
   const formatedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     day: "2-digit",
@@ -59,32 +64,29 @@ function Dashboard() {
     );
   };
 
-  const totalTask = task.length
+  const totalTask = task.length;
   const completedTask = task.filter((t) => t.done).length;
-  const progress = totalTask === 0 ? 0 : Math.round((completedTask / totalTask) * 100)
+  const progress =
+    totalTask === 0 ? 0 : Math.round((completedTask / totalTask) * 100);
 
+  // for projects duplicates
 
+  const uniqueProjects = [...new Set(task.map((t) => t.project))];
 
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
-      <header className="fixed top-0 w-full z-40 bg-white/70 backdrop-blur-xl border-b border-white/20 h-16 flex items-center justify-between px-10">
-        <div className="flex items-center gap-12">
-          <h1 className="text-3xl font-bold text-[#4648d4] tracking-tight">
-            FocusFlow
-          </h1>
-          <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#464554] w-5 h-5" />
-            <input
-              className="w-full bg-white/40 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-[#4648d4]/20 transition-all"
-              placeholder="Search tasks or projects..."
-              type="text"
-              value={searchTerm.search}
-              onChange={handelChange}
-              name="search"
-              id="search"
-            />
-          </div>
+      <header className="fixed top-0 left-64 right-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/20 h-16 flex items-center justify-between px-10">
+        <div className="relative w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#464554] w-5 h-5" />
+          <input
+            className="w-full bg-white/40 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-[#4648d4]/20 transition-all"
+            placeholder="Search tasks or projects..."
+            value={searchTerm.search}
+            onChange={handelChange}
+            name="search"
+            id="search"
+          />
         </div>
         <div className="flex items-center gap-6">
           <button className="text-[#464554] hover:bg-white/40 p-2 rounded-full transition-colors active:scale-95">
@@ -152,24 +154,32 @@ function Dashboard() {
             Projects
           </p>
           <div className="space-y-3">
-            <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="w-2 h-2 rounded-full bg-[#4648d4]" />
-              <span className="text-sm text-[#464554] group-hover:text-[#0b1c30] transition-colors">
-                Deep Work
-              </span>
-            </div>
-            <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="w-2 h-2 rounded-full bg-[#5c5f61]" />
-              <span className="text-sm text-[#464554] group-hover:text-[#0b1c30] transition-colors">
-                Marketing Strategy
-              </span>
-            </div>
-            <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="w-2 h-2 rounded-full bg-[#5d5f5f]" />
-              <span className="text-sm text-[#464554] group-hover:text-[#0b1c30] transition-colors">
-                Personal Growth
-              </span>
-            </div>
+            {uniqueProjects.map((projects) => (
+              <div
+                className={`flex items-center gap-3 group cursor-pointer ${
+                  activeProject === projects
+                    ? "opacity-100"
+                    : "opacity-60 hover:opacity-100"
+                }`}
+                onClick={() =>
+                  setActiveProject((prev) =>
+                    prev === projects ? null : projects,
+                  )
+                }
+                key={projects}
+              >
+                <div className="w-2 h-2 rounded-full bg-[#4648d4]" />
+                <span
+                  className={`text-sm transition-colors ${
+                    activeProject === projects
+                      ? "text-[#0b1c30] font-semibold"
+                      : "text-[#464554]"
+                  }`}
+                >
+                  {projects}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </aside>
@@ -304,7 +314,9 @@ function Dashboard() {
               <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]">
                 Daily Progress
               </p>
-              <span className="text-[#4648d4] font-bold text-xs">{progress}%</span>
+              <span className="text-[#4648d4] font-bold text-xs">
+                {progress}%
+              </span>
             </div>
             <div className="space-y-4">
               <div className="flex gap-1 h-32 items-end justify-between px-2">
@@ -312,7 +324,10 @@ function Dashboard() {
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[50%]" />
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[20%]" />
                 <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[80%]" />
-                <div className="w-4 bg-[#4648d4] rounded-t-full " style={{height: `${progress}%`}} />
+                <div
+                  className="w-4 bg-[#4648d4] rounded-t-full "
+                  style={{ height: `${progress}%` }}
+                />
                 <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
                 <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
               </div>
