@@ -25,7 +25,7 @@ import useTimmer from "@/hooks/use-timer";
 
 function Dashboard() {
   const [task, SetTask] = useState([]);
-  const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer(25);
+  const { timmer, isRunning, toggle, reset, formattedTime, totalSeconds, } = useTimmer(25);
   const [searchTerm, setSearchTerm] = useState({
     search: "",
   });
@@ -284,6 +284,10 @@ function Dashboard() {
                   strokeDasharray="552.92"
                   strokeDashoffset="138.23"
                   strokeWidth="6"
+                  style={{
+                    strokeDashoffset:
+                      552.92 * ((totalSeconds - timmer) / totalSeconds),
+                  }}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
