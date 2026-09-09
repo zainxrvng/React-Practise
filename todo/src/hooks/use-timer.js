@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
-function useTimmer() {
+function useTimmer(intialMinutes = 25) {
   const [isRunning, SetIsRunning] = useState(false);
-  const [timmer, setTimmer] = useState(0);
+  const [timmer, setTimmer] = useState(intialMinutes * 60);
 
   useEffect(() => {
     let timmerId;
     if (isRunning) {
       timmerId = setInterval(() => {
-        setTimmer((prev) => prev + 1);
+        setTimmer((prev) => prev > 0 ? prev -1 : 0);
       }, 1000);
     }
 
@@ -20,8 +20,8 @@ function useTimmer() {
   };
 
   let reset = () => {
-     setTimmer(0);
-     SetIsRunning(false)
+    setTimmer(intialMinutes * 60);
+    SetIsRunning(false);
   };
 
   const formatTime = (totalSeconds) => {
@@ -33,7 +33,15 @@ function useTimmer() {
 
     return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
   };
-return { timmer, formattedTime: formatTime(timmer), isRunning, toggle, reset };}
+  return {
+    timmer,
+    formattedTime: formatTime(timmer),
+    isRunning,
+    toggle,
+    reset,
+    totalSeconds: intialMinutes * 60
+  };
+}
 
 
 export default useTimmer

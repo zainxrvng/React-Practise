@@ -25,7 +25,7 @@ import useTimmer from "@/hooks/use-timer";
 
 function Dashboard() {
   const [task, SetTask] = useState([]);
-  const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer();
+  const { timmer, isRunning, toggle, reset, formattedTime } = useTimmer(25);
   const [searchTerm, setSearchTerm] = useState({
     search: "",
   });
@@ -238,11 +238,18 @@ function Dashboard() {
             ))}
 
             {/* Empty state */}
-            {visableTask.length === 0 && (
+            {task.length === 0 && (
               <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 group cursor-pointer hover:bg-white/20 transition-all">
                 <PlusCircle className="text-[#4648d4]/40 w-9 h-9 group-hover:scale-110 transition-transform" />
                 <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]/40">
                   Add another task to your day
+                </p>
+              </div>
+            )}
+            {visableTask.length === 0 && task.length > 0 && (
+              <div className="border-2 border-dashed border-[#4648d4]/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2">
+                <p className="text-xs font-semibold tracking-wider uppercase text-[#464554]/40">
+                  No tasks match "{searchTerm.search}"
                 </p>
               </div>
             )}
