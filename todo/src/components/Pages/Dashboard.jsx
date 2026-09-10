@@ -13,8 +13,9 @@ import {
   Plus,
 } from "lucide-react";
 import DialogDemo from "../Pages/Dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useTimmer from "@/hooks/use-timer";
+import { supabase } from "@/lib/supabaseClient";
 
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
@@ -25,6 +26,7 @@ import useTimmer from "@/hooks/use-timer";
 
 function Dashboard() {
   const [task, SetTask] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
   const { timmer, isRunning, toggle, reset, formattedTime, totalSeconds, } = useTimmer(25);
   const [searchTerm, setSearchTerm] = useState({
     search: "",
@@ -72,6 +74,30 @@ function Dashboard() {
   // for projects duplicates
 
   const uniqueProjects = [...new Set(task.map((t) => t.project))];
+
+/// for supabase
+
+useEffect(() => {
+
+  const fetchData = async () => {
+    const {data, error} = await supabase.from("task").select("*")
+    if(!error) setTask(data)
+      setIsLoading(false)
+  }
+  fetchData()
+
+
+  // listen for changes 
+
+  const channel = supabase.channel("task-changes").on("postgres_changes", {event: "*", schema: "public" , table: "task"}, () => fetchData())
+  .subscribe()
+
+
+  // clean up 
+
+  return () => supabase.removeChannel(channel)
+}, [])
+
 
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
