@@ -25,7 +25,7 @@ import { supabase } from "@/lib/supabaseClient";
 // back to bg-primary, text-[#464554] back to text-on-surface-variant, etc.
 
 function Dashboard() {
-  const [task, SetTask] = useState([]);
+  const [task, setTask] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
   const { timmer, isRunning, toggle, reset, formattedTime, totalSeconds, } = useTimmer(25);
   const [searchTerm, setSearchTerm] = useState({
@@ -40,8 +40,12 @@ function Dashboard() {
     setSearchTerm({ ...searchTerm, [e.target.name]: e.target.value });
   };
 
-  const addTask = (newtask) => {
-    SetTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
+  const addTask = async (newtask) => {
+   const {error} = await supabase.from("task").insert([{...newtask, done: false}])
+
+   if (error) console.log("Error adding a new task", error.message);
+   
+    // setTask((prev) => [...prev, { id: Date.now(), done: false, ...newtask }]);
   };
 
   const visableTask = task.filter((t) => {
@@ -60,10 +64,13 @@ function Dashboard() {
 
   const remainingTask = task.filter((t) => !t.done).length;
 
-  const toggleTask = (id) => {
-    SetTask((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
-    );
+  const toggleTask = async (id, currentDone) => {
+    const {error} = await supabase.from("task").update({done: !currentDone}).eq("id", id)
+    
+    if (error) console.log("error while toggle taks", error.message);
+    // setTask((prev) =>
+    //   prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
+    // );
   };
 
   const totalTask = task.length;
@@ -89,14 +96,28 @@ useEffect(() => {
 
   // listen for changes 
 
-  const channel = supabase.channel("task-changes").on("postgres_changes", {event: "*", schema: "public" , table: "task"}, () => fetchData())
-  .subscribe()
+  // const channel = supabase.channel("task-changes").on("postgres_changes", {event: "*", schema: "public" , table: "task"}, () => fetchData())
+  // .subscribe()
 
-
+const channel = supabase
+  .channel("task-changes")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "task" },
+    (payload) => {
+      console.log("realtime event:", payload.eventType, payload);
+      fetchData();
+    },
+  )
+  .subscribe((status) => {
+    console.log("subscription status:", status); // temp
+  });
   // clean up 
 
   return () => supabase.removeChannel(channel)
 }, [])
+
+
 
 
   return (
@@ -235,7 +256,7 @@ useEffect(() => {
                       ? "bg-[#4648d4] border-[#4648d4]"
                       : "border-[#4648d4] hover:bg-[#4648d4]/5"
                   }`}
-                  onClick={() => toggleTask(tasks.id)}
+                  onClick={() => toggleTask(tasks.id, tasks.done)}
                 >
                   {tasks.done && (
                     <Check className="text-white w-4 h-4" strokeWidth={3} />

@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 export function DialogDemo({ onAddtask }) {
+  const [open, setOpen] = useState(false); // new
   const [formdata, setFormData] = useState({
     title: "",
     description: "",
@@ -27,12 +28,15 @@ export function DialogDemo({ onAddtask }) {
   };
   const handelSubmit = (e) => {
     e.preventDefault();
-    if (!formdata.title || !formdata.description) return 
+    if (!formdata.title || !formdata.description) return;
     onAddtask(formdata);
+    setFormData({ title: "", description: "", project: "", priority: "" });
+    setOpen(false)
+
     console.log("form Submitted", formdata);
   };
   return (
-    <Dialog>
+    <Dialog open= {open}  onOpenChange={setOpen} >
       <DialogTrigger
         render={
           <Button
@@ -49,9 +53,7 @@ export function DialogDemo({ onAddtask }) {
             <DialogTitle className="text-[#0b1c30] font-bold">
               New Task
             </DialogTitle>
-            <DialogDescription className="text-[#464554]">
-              
-            </DialogDescription>
+            <DialogDescription className="text-[#464554]"></DialogDescription>
           </DialogHeader>
           <FieldGroup>
             <Field>
