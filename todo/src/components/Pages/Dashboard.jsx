@@ -11,6 +11,7 @@ import {
   PlusCircle,
   RotateCcw,
   Plus,
+  Trash2
 } from "lucide-react";
 import DialogDemo from "../Pages/Dialog";
 import { useEffect, useState } from "react";
@@ -117,7 +118,12 @@ const channel = supabase
   return () => supabase.removeChannel(channel)
 }, [])
 
+const deleteTask = async (id) => {
+  console.log("delete is clicked", id);
+ const {error} = await supabase.from('task').delete().eq("id", id)
 
+ if (error) console.log("an error has come ", error.message);
+};
 
 
   return (
@@ -281,6 +287,15 @@ const channel = supabase
                 <button className="text-[#464554]/40 opacity-0 group-hover:opacity-100 transition-opacity">
                   <MoreVertical className="w-5 h-5" />
                 </button>
+                <div>
+                  <button
+                    onClick={() => deleteTask(tasks.id)}
+                    className="p-1.5 rounded-lg text-[#464554] hover:text-red-500 hover:bg-red-50/70 transition-colors"
+                    aria-label="Delete task"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
             ))}
 
