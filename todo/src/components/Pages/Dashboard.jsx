@@ -17,6 +17,7 @@ import DialogDemo from "../Pages/Dialog";
 import { useEffect, useState } from "react";
 import useTimmer from "@/hooks/use-timer";
 import { supabase } from "@/lib/supabaseClient";
+import TimerSettingDialog from "./TimerSettingsDialog";
 
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
@@ -28,7 +29,15 @@ import { supabase } from "@/lib/supabaseClient";
 function Dashboard() {
   const [task, setTask] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
-  const { timmer, isRunning, toggle, reset, formattedTime, totalSeconds, } = useTimmer(25);
+  const {
+    timmer,
+    isRunning,
+    toggle,
+    reset,
+    changeDuration,
+    formattedTime,
+    totalSeconds,
+  } = useTimmer(25);
   const [searchTerm, setSearchTerm] = useState({
     search: "",
   });
@@ -124,7 +133,29 @@ const deleteTask = async (id) => {
 
  if (error) console.log("an error has come ", error.message);
 };
+// progress bar
 
+const weeklyProgress = (() => {
+  const days = ["S", "M", "T", "W", "T", "F", "S"]; // Sun-Sat, JS getDay() order
+  const buckets = Array(7)
+    .fill(null)
+    .map(() => ({ total: 0, done: 0 }));
+
+  task.forEach((t) => {
+    const dayIndex = new Date(t.created_at).getDay(); // 0 = Sunday
+    buckets[dayIndex].total += 1;
+    if (t.done) buckets[dayIndex].done += 1;
+  });
+
+  return days.map((label, i) => ({
+    label,
+    percent:
+      buckets[i].total === 0
+        ? 0
+        : Math.round((buckets[i].done / buckets[i].total) * 100),
+    isToday: i === new Date().getDay(),
+  }));
+})();
 
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
@@ -364,20 +395,17 @@ const deleteTask = async (id) => {
             <div className="flex gap-4 w-full">
               <button
                 className="flex-grow bg-[#4648d4] text-white py-3 rounded-xl text-xs font-semibold tracking-wider uppercase hover:shadow-lg hover:shadow-[#4648d4]/30 active:scale-95 transition-all"
-                onClick={() => {
-                  toggle();
-                }}
+                onClick={() => toggle()}
               >
                 {isRunning ? "Stop" : "Start"}
               </button>
               <button
                 className="w-12 h-12 flex items-center justify-center rounded-xl text-[#464554] hover:text-[#4648d4] transition-colors bg-white/70 backdrop-blur-xl border border-white/20"
-                onClick={() => {
-                  reset();
-                }}
+                onClick={() => reset()}
               >
                 <RotateCcw className="w-5 h-5" />
               </button>
+              <TimerSettingDialog onChangeDuration={changeDuration} />
             </div>
           </div>
 
@@ -393,16 +421,15 @@ const deleteTask = async (id) => {
             </div>
             <div className="space-y-4">
               <div className="flex gap-1 h-32 items-end justify-between px-2">
-                <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[30%]" />
-                <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[50%]" />
-                <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[20%]" />
-                <div className="w-4 bg-[#4648d4]/20 rounded-t-full h-[80%]" />
-                <div
-                  className="w-4 bg-[#4648d4] rounded-t-full "
-                  style={{ height: `${progress}%` }}
-                />
-                <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
-                <div className="w-4 bg-[#4648d4]/10 rounded-t-full h-[10%]" />
+                {weeklyProgress.map((day, i) => (
+                  <div
+                    key={i}
+                    className={`w-4 rounded-t-full transition-all ${
+                      day.isToday ? "bg-[#4648d4]" : "bg-[#4648d4]/20"
+                    }`}
+                    style={{ height: `${Math.max(day.percent, 4)}%` }}
+                  />
+                ))}
               </div>
               <div className="flex justify-between px-1 text-[10px] text-[#464554]/40 font-semibold">
                 <span>M</span>

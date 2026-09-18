@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 function useTimmer(intialMinutes = 25) {
+  const [duration, setDuration] = useState(intialMinutes)
   const [isRunning, SetIsRunning] = useState(false);
   const [timmer, setTimmer] = useState(intialMinutes * 60);
 
@@ -24,6 +25,12 @@ function useTimmer(intialMinutes = 25) {
     SetIsRunning(false);
   };
 
+    const changeDuration = (newMinutes) => {
+      setDuration(newMinutes);
+      setTimmer(newMinutes * 60);
+      SetIsRunning(false);
+    };
+
   const formatTime = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -39,7 +46,8 @@ function useTimmer(intialMinutes = 25) {
     isRunning,
     toggle,
     reset,
-    totalSeconds: intialMinutes * 60
+    changeDuration, // NEW: expose it
+    totalSeconds: duration * 60, // now derived from state, not the static prop
   };
 }
 
