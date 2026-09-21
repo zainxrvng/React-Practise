@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import useTimmer from "@/hooks/use-timer";
 import { supabase } from "@/lib/supabaseClient";
 import TimerSettingDialog from "./TimerSettingsDialog";
+import { LogOut } from "lucide-react"; // add LogOut to your existing lucide import
 
 // Static markup only — no state, no handlers yet.
 // Colors are hardcoded as Tailwind arbitrary values (bg-[#4648d4] etc.)
@@ -157,6 +158,10 @@ const weeklyProgress = (() => {
   }));
 })();
 
+const handleSignOut = async () => {
+  await supabase.auth.signOut();
+};
+
   return (
     <div className="bg-[#f8f9ff] text-[#0b1c30] min-h-screen font-sans">
       {/* Top AppBar */}
@@ -172,6 +177,13 @@ const weeklyProgress = (() => {
             id="search"
           />
         </div>
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold tracking-wider uppercase text-[#464554] hover:bg-white/60 transition"
+        >
+          <LogOut size={16} />
+          Sign out
+        </button>
         <div className="flex items-center gap-6">
           <button className="text-[#464554] hover:bg-white/40 p-2 rounded-full transition-colors active:scale-95">
             <Bell className="w-5 h-5" />

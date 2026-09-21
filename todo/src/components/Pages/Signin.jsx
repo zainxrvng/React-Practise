@@ -10,20 +10,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient"; 
 
 const Signin = () => {
   const [formdata, Setformdata] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const handleChange = (e) => {
     Setformdata({ ...formdata, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formsubmitted", formdata);
+    setError("");
+    setSubmitting(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formdata.email,
+      password: formdata.password,
+    });
+
+    setSubmitting(false);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    navigate("/Dashboard");
   };
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#f8f9ff]">
@@ -91,15 +110,18 @@ const Signin = () => {
                 />
               </div>
             </div>
+            {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button
               type="submit"
+              disabled={submitting}
               className="w-full rounded-xl bg-[#4648d4] text-white hover:bg-[#4648d4]/90 shadow-lg shadow-[#4648d4]/20 text-xs font-semibold tracking-wider uppercase py-3"
             >
-              Login
+              {submitting ? "Logging in..." : "Login"}
             </Button>
             <Button
+              type="button"
               variant="outline"
               className="w-full rounded-xl border-[#4648d4]/20 text-[#464554] hover:bg-white/40 text-xs font-semibold tracking-wider uppercase py-3"
             >
