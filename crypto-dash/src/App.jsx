@@ -9,22 +9,20 @@ const App = () => {
 
     useEffect(() => {
 
-
-      fetch(apiURl)
-        .then((res) => {
-          if (!res.ok) throw new Error("failed to fetch data")
-            return res.json()
-          
-        })
-        .then((data) => {
-          console.log(data);
-          setCoins(data)
-          Setloading(false)
-        })
-        .catch((err) => {
-          setError(err)
-          Setloading(false)
-        })
+        const fetechCoins = async () => {
+          try {
+            const res = await fetch(apiURl);
+            if (!res.ok) throw new Error("faild to fetch data");
+            const data = await res.json();
+            console.log(data);
+            setCoins(data);
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            Setloading(false);
+          }
+        };
+          fetechCoins();
     }, [])
 
   return (
