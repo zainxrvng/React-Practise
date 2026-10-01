@@ -3,21 +3,20 @@ import CoinCard from "./components/CoinCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-
-const apiURL =
-  "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false" +
-  `&x_cg_demo_api_key=${import.meta.env.VITE_CG_KEY}`;
+import Select from "./components/Select";
 
 const App = () => {
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [limit, Setlimit] = useState(0)
 
   const fetchCoins = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(apiURL);
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=false` +
+  `&x_cg_demo_api_key=${import.meta.env.VITE_CG_KEY}`);
       if (res.status === 429)
         throw new Error(
           "CoinGecko is rate-limiting requests. Wait a minute, then retry.",
@@ -29,7 +28,7 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [limit]);
 
   useEffect(() => {
     fetchCoins();
@@ -49,6 +48,7 @@ const App = () => {
           <p className="mt-2 text-white/50">
             The 10 largest coins by market cap, priced in USD.
           </p>
+         <Select limit={limit} setLimitOnChange={Setlimit}/>
         </header>
 
         {loading && (
